@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+        include:
+          - os: windows-latest
+            python-version: "3.13"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: uv sync --locked
+      - run: uv run pytest -q
+      - run: uv run dineoncampus-mcp --help
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: shellcheck deploy/install-server.sh
+
+  install-script:
+    # Runs the real installer on a fresh Ubuntu VM (systemd + Caddy), then exercises it.
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install
+        run: sudo bash deploy/install-server.sh --location-id 615f4f93a9f13a32678e5feb --domain localhost --ref ${{ github.sha }}
+      - name: Ingest a snapshot and query it over MCP
+        run: |
+          curl -fsS http://127.0.0.1:8000/health
+          TOKEN=$(sudo sed -n 's/^DINING_INGEST_TOKEN=//p' /etc/dineoncampus-mcp.env)
+          export DAY=$(TZ=America/New_York date +%F)
+          cat > day.json <<JSON
+          {"schema": 1, "date": "$DAY", "location_id": "615f4f93a9f13a32678e5feb",
+           "meals": [{"name": "Lunch", "items": [{"name": "Lentil Soup", "station": "Soups", "tags": ["Vegan"],
+                      "nutrients": {"calories": 180, "protein_g": 11}}]}]}
+          JSON
+          test "$(curl -s -o /dev/null -w '%{http_code}' -X POST --data @day.json http://127.0.0.1:8000/ingest)" = 401
+          curl -fsS -X POST -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' --data @day.json http://127.0.0.1:8000/ingest
+          /opt/dineoncampus-mcp/bin/python - <<'PY'
+          import asyncio, json, os
+          from mcp import Client
+          async def main():
+              async with Client("http://127.0.0.1:8000/mcp") as c:
+                  r = await c.call_tool("search_menu", {"date": os.environ["DAY"], "tags": ["vegan"]})
+                  out = json.loads(r.content[0].text)
+                  assert out["items"][0]["name"] == "Lentil Soup", out
+                  print("MCP ok:", out)
+          asyncio.run(main())
+          PY
+          curl -fsSk https://localhost/health
+      - name: Re-running keeps the token
+        run: |
+          BEFORE=$(sudo sed -n 's/^DINING_INGEST_TOKEN=//p' /etc/dineoncampus-mcp.env)
+          sudo bash deploy/install-server.sh --location-id 615f4f93a9f13a32678e5feb --domain localhost --ref ${{ github.sha }}
+          test "$BEFORE" = "$(sudo sed -n 's/^DINING_INGEST_TOKEN=//p' /etc/dineoncampus-mcp.env)"
+      - if: failure()
+        run: sudo journalctl -u dineoncampus-mcp -u caddy -n 100 --no-pager

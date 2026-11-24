@@ -1,0 +1,140 @@
+{
+ "_comment": "Upstream response shapes as served in October 2026 (nutrient names carry units, items carry diet/allergen filters). Scrambled Eggs, Chicken Tikka Masala, Cheeseburger on Bun and Grilled Chili Lime Chicken use values observed then; the rest are illustrative.",
+ "periods": {
+  "locationId": "615f4f93a9f13a32678e5feb",
+  "date": "2026-10-20",
+  "periods": [
+   {"id": "p-breakfast", "name": "Breakfast", "slug": "breakfast"},
+   {"id": "p-lunch", "name": "Lunch", "slug": "lunch"},
+   {"id": "p-dinner", "name": "Dinner", "slug": "dinner"}
+  ],
+  "menu": {
+   "id": 1, "date": "2026-10-20",
+   "period": {"id": "p-breakfast", "name": "Breakfast", "categories": [
+    {"id": "c1", "name": "The Daily Plate", "items": [
+     {"id": "i1", "name": "Scrambled Eggs", "desc": "", "portion": "1/2 cup", "ingredients": "Liquid Egg^, Canola Oil", "calories": 210, "customAllergens": [],
+      "nutrients": [
+       {"name": "Calories", "value": "210", "uom": "kcal", "valueNumeric": "210"},
+       {"name": "Protein (g)", "value": "14", "uom": "g", "valueNumeric": "14"},
+       {"name": "Total Carbohydrates (g)", "value": "1", "uom": "g", "valueNumeric": "1"},
+       {"name": "Sugar (g)", "value": "0", "uom": "g", "valueNumeric": "0"},
+       {"name": "Total Fat (g)", "value": "16", "uom": "g", "valueNumeric": "16"},
+       {"name": "Saturated Fat (g)", "value": "4", "uom": "g", "valueNumeric": "4"},
+       {"name": "Cholesterol (mg)", "value": "420", "uom": "mg", "valueNumeric": "420"},
+       {"name": "Dietary Fiber (g)", "value": "0", "uom": "g", "valueNumeric": "0"},
+       {"name": "Sodium (mg)", "value": "150", "uom": "mg", "valueNumeric": "150"},
+       {"name": "Potassium (mg)", "value": "150", "uom": "mg", "valueNumeric": "150"},
+       {"name": "Calcium (mg)", "value": "70", "uom": "mg", "valueNumeric": "70"},
+       {"name": "Iron (mg)", "value": "2", "uom": "mg", "valueNumeric": "2"},
+       {"name": "Trans Fat (g)", "value": "0", "uom": "g", "valueNumeric": "0"},
+       {"name": "Vitamin D (IU)", "value": "120", "uom": "IU", "valueNumeric": "120"},
+       {"name": "Vitamin C (mg)", "value": "0", "uom": "mg", "valueNumeric": "0"},
+       {"name": "Calories From Fat", "value": "140", "uom": "kcal", "valueNumeric": "140"},
+       {"name": "Vitamin A (RE)", "value": "-", "uom": "RE", "valueNumeric": "-"},
+       {"name": "Saturated Fat + Trans Fat (g)", "value": "5", "uom": "g", "valueNumeric": "5"}
+      ],
+      "filters": [{"name": "Egg"}, {"name": "Vegetarian"}, {"name": "Good Source of Protein"}]},
+     {"id": "i2", "name": "Bacon", "desc": "", "portion": "2 slices", "ingredients": "Bacon^", "calories": 90, "customAllergens": [],
+      "nutrients": [
+       {"name": "Calories", "value": "90", "uom": "kcal", "valueNumeric": "90"},
+       {"name": "Protein (g)", "value": "6", "uom": "g", "valueNumeric": "6"},
+       {"name": "Total Carbohydrates (g)", "value": "0", "uom": "g", "valueNumeric": "0"},
+       {"name": "Total Fat (g)", "value": "7", "uom": "g", "valueNumeric": "7"},
+       {"name": "Sodium (mg)", "value": "330", "uom": "mg", "valueNumeric": "330"}
+      ],
+      "filters": [{"name": "Pork"}]}
+    ]}
+   ]}
+  }
+ },
+ "menus": {
+  "p-lunch": {
+   "id": null, "locationId": "615f4f93a9f13a32678e5feb", "date": "2026-10-20", "closedOnDate": false,
+   "period": {"id": "p-lunch", "name": "Lunch", "categories": [
+    {"id": "c2", "name": "The Halal Kitchen", "items": [
+     {"id": "i3", "name": "Chicken Tikka Masala", "desc": "Creamy chicken tikka masala with garam masala, tomatoes, oatmilk, and spices", "portion": "1 cup",
+      "ingredients": "Chicken Thigh, Tomato Puree^, Plain Oat Milk^, White Onions, Tomato Paste^, Canola Oil, Cilantro, Lemon Juice, Kosher Salt^, Ginger Root, Chili Powder^, Garlic, Cardamom", "calories": 240, "customAllergens": [],
+      "nutrients": [
+       {"name": "Calories", "value": "240", "uom": "kcal", "valueNumeric": "240"},
+       {"name": "Protein (g)", "value": "23", "uom": "g", "valueNumeric": "23"},
+       {"name": "Total Carbohydrates (g)", "value": "14", "uom": "g", "valueNumeric": "14"},
+       {"name": "Total Fat (g)", "value": "10", "uom": "g", "valueNumeric": "10"},
+       {"name": "Saturated Fat (g)", "value": "2.5", "uom": "g", "valueNumeric": "2.5"},
+       {"name": "Cholesterol (mg)", "value": "115", "uom": "mg", "valueNumeric": "115"},
+       {"name": "Dietary Fiber (g)", "value": "3", "uom": "g", "valueNumeric": "3"},
+       {"name": "Sodium (mg)", "value": "470", "uom": "mg", "valueNumeric": "470"},
+       {"name": "Potassium (mg)", "value": "720", "uom": "mg", "valueNumeric": "720"},
+       {"name": "Calcium (mg)", "value": "90", "uom": "mg", "valueNumeric": "90"},
+       {"name": "Iron (mg)", "value": "3.3", "uom": "mg", "valueNumeric": "3.3"},
+       {"name": "Vitamin D (IU)", "value": "20", "uom": "IU", "valueNumeric": "20"}
+      ],
+      "filters": [{"name": "Garlic"}, {"name": "Onion"}, {"name": "Poultry"}, {"name": "Tomato"}, {"name": "Good Source of Protein"}]},
+     {"id": "i4", "name": "Basmati Rice", "desc": "", "portion": "1/2 cup", "ingredients": "Basmati Rice, Water, Kosher Salt^", "calories": 160, "customAllergens": [],
+      "nutrients": [
+       {"name": "Calories", "value": "160", "uom": "kcal", "valueNumeric": "160"},
+       {"name": "Protein (g)", "value": "3", "uom": "g", "valueNumeric": "3"},
+       {"name": "Total Carbohydrates (g)", "value": "36", "uom": "g", "valueNumeric": "36"},
+       {"name": "Total Fat (g)", "value": "0", "uom": "g", "valueNumeric": "0"},
+       {"name": "Dietary Fiber (g)", "value": "1", "uom": "g", "valueNumeric": "1"},
+       {"name": "Sodium (mg)", "value": "150", "uom": "mg", "valueNumeric": "150"}
+      ],
+      "filters": [{"name": "Vegan"}, {"name": "Vegetarian"}]}
+    ]},
+    {"id": "c3", "name": "Flame", "items": [
+     {"id": "i5", "name": "Cheeseburger on Bun", "desc": "", "portion": "1 sandwich", "ingredients": "Beef Patty, Whole Wheat Hamburger Bun^, American Cheese^", "calories": 480, "customAllergens": [],
+      "nutrients": [
+       {"name": "Calories", "value": "480", "uom": "kcal", "valueNumeric": "480"},
+       {"name": "Protein (g)", "value": "31", "uom": "g", "valueNumeric": "31"},
+       {"name": "Total Carbohydrates (g)", "value": "35", "uom": "g", "valueNumeric": "35"},
+       {"name": "Total Fat (g)", "value": "23", "uom": "g", "valueNumeric": "23"},
+       {"name": "Dietary Fiber (g)", "value": "3", "uom": "g", "valueNumeric": "3"},
+       {"name": "Sugar (g)", "value": "3", "uom": "g", "valueNumeric": "3"},
+       {"name": "Sodium (mg)", "value": "680", "uom": "mg", "valueNumeric": "680"}
+      ],
+      "filters": [{"name": "Beef"}, {"name": "Gluten"}, {"name": "Milk"}, {"name": "Pork*"}, {"name": "Wheat"}, {"name": "Good Source of Protein"}]}
+    ]},
+    {"id": "c4", "name": "Fajita Station", "items": [
+     {"id": "i6", "name": "Grilled Chili Lime Chicken", "desc": "", "portion": "4 ounce", "ingredients": null, "calories": 270, "customAllergens": [],
+      "nutrients": [
+       {"name": "Calories", "value": "270", "uom": "kcal", "valueNumeric": "270"},
+       {"name": "Protein (g)", "value": "31", "uom": "g", "valueNumeric": "31"},
+       {"name": "Total Carbohydrates (g)", "value": "2", "uom": "g", "valueNumeric": "2"},
+       {"name": "Total Fat (g)", "value": "15", "uom": "g", "valueNumeric": "15"},
+       {"name": "Dietary Fiber (g)", "value": "1", "uom": "g", "valueNumeric": "1"},
+       {"name": "Sugar (g)", "value": "0", "uom": "g", "valueNumeric": "0"},
+       {"name": "Sodium (mg)", "value": "160", "uom": "mg", "valueNumeric": "160"}
+      ],
+      "filters": [{"name": "Garlic"}, {"name": "Onion"}, {"name": "Poultry"}]}
+    ]}
+   ]}
+  },
+  "p-dinner": {
+   "id": null, "locationId": "615f4f93a9f13a32678e5feb", "date": "2026-10-20", "closedOnDate": false,
+   "period": {"id": "p-dinner", "name": "Dinner", "categories": [
+    {"id": "c5", "name": "The Halal Kitchen", "items": [
+     {"id": "i7", "name": "Zucchini Lyonnaise", "desc": "", "portion": "1/2 cup", "ingredients": "Zucchini, Yellow Onions, Canola Oil, Kosher Salt^", "calories": 60, "customAllergens": [],
+      "nutrients": [
+       {"name": "Calories", "value": "60", "uom": "kcal", "valueNumeric": "60"},
+       {"name": "Protein (g)", "value": "1", "uom": "g", "valueNumeric": "1"},
+       {"name": "Total Carbohydrates (g)", "value": "5", "uom": "g", "valueNumeric": "5"},
+       {"name": "Total Fat (g)", "value": "4", "uom": "g", "valueNumeric": "4"},
+       {"name": "Dietary Fiber (g)", "value": "1", "uom": "g", "valueNumeric": "1"},
+       {"name": "Sodium (mg)", "value": "200", "uom": "mg", "valueNumeric": "200"}
+      ],
+      "filters": [{"name": "Onion"}, {"name": "Vegan"}, {"name": "Vegetarian"}]}
+    ]},
+    {"id": "c6", "name": "Create", "items": [
+     {"id": "i8", "name": "Vodka Sauce", "desc": "", "portion": "2 fl oz", "ingredients": "Ground Tomatoes^, Whipping Cream^, Yellow Onions, Vodka^, Tomato Paste^, Garlic, Canola Oil, Basil, Parmesan Cheese^", "calories": 90, "customAllergens": [],
+      "nutrients": [
+       {"name": "Calories", "value": "90", "uom": "kcal", "valueNumeric": "90"},
+       {"name": "Protein (g)", "value": "2", "uom": "g", "valueNumeric": "2"},
+       {"name": "Total Carbohydrates (g)", "value": "6", "uom": "g", "valueNumeric": "6"},
+       {"name": "Total Fat (g)", "value": "6", "uom": "g", "valueNumeric": "6"},
+       {"name": "Sodium (mg)", "value": "260", "uom": "mg", "valueNumeric": "260"}
+      ],
+      "filters": [{"name": "Alcohol"}, {"name": "Milk"}]}
+    ]}
+   ]}
+  }
+ }
+}
