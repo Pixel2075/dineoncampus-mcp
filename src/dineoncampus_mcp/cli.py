@@ -50,14 +50,28 @@ def cmd_serve(args) -> int:
     from mcp.server.transport_security import TransportSecuritySettings
 
     from .server import build_server
+    from .local import SelfHostedSource
     from .sources import DirectSource, SnapshotSource
 
     tz = load_tz(args.tz)
     token = env("DINING_INGEST_TOKEN")
+    local_source = None
     if args.source == "direct":
         if not args.location_id:
             return fail(f"set DINING_LOCATION_ID or --location-id ({FIND_HINT})")
         source = DirectSource(DineOnCampus(), args.location_id, tz, site_id=args.site_id)
+    elif args.source == "local":
+        if not args.location_id:
+            return fail(f"set DINING_LOCATION_ID or --location-id ({FIND_HINT})")
+        refresh = int(args.refresh_seconds or env("DINING_REFRESH_SECONDS") or 21600)
+        local_source = SelfHostedSource(
+            DineOnCampus(), args.data_dir, tz, location_id=args.location_id,
+            site_id=args.site_id, days=int(args.sync_days or env("DINING_SYNC_DAYS") or 7),
+            refresh_seconds=refresh,
+            log=lambda m: print(f"{datetime.now().isoformat(timespec='seconds')} {m}", file=sys.stderr),
+        )
+        local_source.start()
+        source = local_source
     else:
         if args.transport == "http" and not token:
             return fail("snapshot mode needs DINING_INGEST_TOKEN so `sync` can push menus to /ingest")
@@ -214,6 +228,36 @@ def cmd_sync(args) -> int:
     return 1 if failures else 0
 
 
+def cmd_sync_local(args) -> int:
+    """Fetch upcoming days into the local snapshot store on this machine; no server needed."""
+    location_id = args.location_id or env("DINING_LOCATION_ID")
+    site_id = args.site_id or env("DINING_SITE_ID")
+    if not location_id:
+        return fail(f"set DINING_LOCATION_ID or --location-id ({FIND_HINT})")
+    tz_name = str(args.tz or env("DINING_TZ") or DEFAULT_TZ)
+    tz = load_tz(tz_name)
+    days = int(args.days or env("DINING_SYNC_DAYS") or 7)
+    data_dir = str(args.data_dir or env("DINING_DATA_DIR") or DEFAULT_DATA_DIR)
+    log_path = Path(args.log) if args.log else None
+
+    def log(message: str) -> None:
+        line = f"{datetime.now().isoformat(timespec='seconds')} {message}"
+        print(line)
+        if log_path:
+            with log_path.open("a", encoding="utf-8") as f:
+                f.write(line + "\n")
+
+    from .local import SelfHostedSource
+    source = SelfHostedSource(
+        DineOnCampus(), data_dir, tz, location_id=location_id, site_id=site_id,
+        days=days, refresh_seconds=0, log=log,
+    )
+    result = source.refresh_once()
+    saved = result.get("saved", [])
+    log(f"refreshed {len(saved)} day(s); available: {', '.join(result.get('available', [])) or 'none'}")
+    return 1 if result.get("failed") and not saved else 0
+
+
 # ---------------------------------------------------------------- parser
 
 def build_parser() -> argparse.ArgumentParser:
@@ -232,8 +276,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     serve = sub.add_parser("serve", help="run the MCP server (default)")
     location_args(serve)
-    serve.add_argument("--source", choices=["direct", "snapshots"], default=env("DINING_SOURCE", "direct"),
-                       help="direct: fetch from DineOnCampus; snapshots: serve menus pushed by `sync` [DINING_SOURCE]")
+    serve.add_argument("--source", choices=["direct", "local", "snapshots"], default=env("DINING_SOURCE", "direct"),
+                       help="direct: fetch from DineOnCampus; local: self-hosted fetch+snapshot on one machine; snapshots: serve menus pushed by `sync` [DINING_SOURCE]")
+    serve.add_argument("--sync-days", type=int, default=None,
+                       help="local mode: days after today to cache [DINING_SYNC_DAYS, default 7]")
+    serve.add_argument("--refresh-seconds", type=int, default=None,
+                       help="local mode: seconds between background refreshes [DINING_REFRESH_SECONDS, default 21600]")
     serve.add_argument("--transport", choices=["stdio", "http"], default=env("DINING_TRANSPORT", "stdio"),
                        help="stdio for local clients, http for a remote server [DINING_TRANSPORT]")
     serve.add_argument("--host", default=env("DINING_HOST", "127.0.0.1"), help="HTTP bind address [DINING_HOST]")
@@ -266,6 +314,15 @@ def build_parser() -> argparse.ArgumentParser:
     sync.add_argument("--config", help="JSON file with server, token, location_id, site_id, tz, days")
     sync.add_argument("--log", help="also append log lines to this file")
     sync.set_defaults(func=cmd_sync)
+
+    sync_local = sub.add_parser("sync-local", help="fetch upcoming days into this machine's snapshot store (no second PC)")
+    sync_local.add_argument("--location-id", help="[DINING_LOCATION_ID]")
+    sync_local.add_argument("--site-id", help="[DINING_SITE_ID]")
+    sync_local.add_argument("--tz", help=f"[DINING_TZ, default {DEFAULT_TZ}]")
+    sync_local.add_argument("--days", type=int, help="days after today to cache [DINING_SYNC_DAYS, default 7]")
+    sync_local.add_argument("--data-dir", help="local snapshot directory [DINING_DATA_DIR]")
+    sync_local.add_argument("--log", help="also append log lines to this file")
+    sync_local.set_defaults(func=cmd_sync_local)
     return parser
 
 
